@@ -8,4 +8,4 @@ rsconnect::setAccountInfo(
 )
 
 # Deploy
-rsconnect::deployApp(appName = "Apprenticeships Statistics")
+rsconnect::deployApp()
