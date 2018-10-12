@@ -5,6 +5,7 @@
 #library (ggplot2)
 #library(stringr)
 #library(reshape2)
+library(Rcpp)
 library(leaflet)
 library(geojsonio)
 library(rgdal)
@@ -26,6 +27,11 @@ library (rpivotTable)
 library (reshape2)
 library(grid)
 library(packrat)
+library(httr)
+library(testthat)
+library(devtools)
+library(RSelenium)
+
 
 ##
 #Ricks script
