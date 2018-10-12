@@ -8,11 +8,11 @@
 #
 
 #library(shiny)
-source("Nov app first page plots.R")
+# source("Nov app first page plots.R")
 
 # Define UI 
 shinyUI( 
-  navbarPage("Apprenticeships Statistics ", id = "nav", theme = "shiny.css",
+  navbarPage("Apprenticeships Statistics", id = "nav", theme = "shiny.css",
                     
   #Tab1
 # tabPanel("Static version",
