@@ -713,6 +713,12 @@ Version: 0.6
 Hash: a149d4e6a2f7d6422e063a19cca52bb9
 Requires: xfun
 
+Package: units
+Source: CRAN
+Version: 0.6-1
+Hash: c5688fcd8c49ef90e2c6aa603efce61e
+Requires: Rcpp
+
 Package: utf8
 Source: CRAN
 Version: 1.1.4
