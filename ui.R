@@ -8,7 +8,7 @@
 #
 
 #library(shiny)
-# source("Nov app first page plots.R")
+source("Nov app first page plots.R")
 
 # Define UI 
 shinyUI( 
