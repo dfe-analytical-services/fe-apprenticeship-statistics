@@ -23,7 +23,7 @@ library(DT)
 library(ggalt)
 library(magrittr)
 
-library (rpivotTable)
+#library (rpivotTable)
 library (reshape2)
 library(grid)
 library(packrat)
@@ -111,39 +111,20 @@ level_plot <- ggplot(data=startsbylev) +
 ####
 # 2. General functions, formatting years and rounding ----
 
-# Change the year variable into xxxx/xx format
-
-#formatyr <- function(refyear) {
-
-#  sub("(.{4})(.*)", "\\1/\\2", refyear)
-
-#}
-
-# example
-# formatyr(201213)
-# = 2012/13
 
 
 
 ####
 # 3. Load the data required ----
 
-# load main_ud file
-# includes main measures at school, la, region and national level for 2006/07 to 2015/16
 
-# 1415 - historic info
 main_ud <- read_csv('data/poc_2_1415.csv', col_types = cols(.default = "c"))
 poc3<- read_csv('data/poc3.csv', col_types = cols(.default = "c"))
 
 #glimpse(main_ud)
 
-# load reason_ud file
-# includes la, region and national level for 2006/07 to 2015/16
 
-#POC Output - 1617
-#poc_ud <- read_csv('data/poc3.csv', col_types = cols(.default = "c")) # Old script
-#poc_ud <- read_csv('data/PT3_2.csv', col_types = cols(.default = "c")) # New script
-poc_ud <- read_csv('data/PT3_2_num_2.csv', col_types = cols(.default = "c")) # New script
+poc_ud <- read_csv('data/PT3_2_num_2.csv', col_types = cols(.default = "c")) 
 
 
 #SFR Output
@@ -153,9 +134,7 @@ SFR_ud <- read_csv('data/sfr.csv', col_types = cols(.default = "c"))
 #Commit Output
 nat_commit <- read_csv('data/commit_ud.csv', col_types = cols(.default = "c"))
 
-# characteristics UD
 
-#char_ud <- read_csv('data/SFR35_2017_National_characteristics.csv', col_types = cols(.default = "c"))
 
 ####
 # 4. Front page ----
@@ -242,10 +221,6 @@ national_bars <- function(category) { # was x
 ####
 # 4. LA trends ----
 #Starts & Achievements
-#la_plot_data <-
-#  dplyr::select(poc_ud, 
-#                level,la_name,SSA,Age,Starts,Achievements) # Old script
-#filter(data, Level=='Totals', `SSA T1`=='Totals',Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals',Age=='Totals')
 
 la_plot_data <-
   dplyr::filter(poc_ud, Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals')#%>%
@@ -259,8 +234,6 @@ la_plot_data <- within(la_plot_data,
                        SSA <- factor(SSA, 
                                      levels=names(sort(table(SSA), 
                                                        decreasing=FALSE))))
-## Order two
-#la_plot_data$SSA <- factor(la_plot_data$SSA, levels="Health, Public Services and Care","Science and Mathematics","Agriculture, Horticulture and Animal Care","Engineering and Manufacturing Technologies","Construction, Planning and the Built Environment","Information and Communication Technology (ICT)","Retail and Commercial Enterprise","Leisure, Travel and Tourism", "Arts, Media and Publishing","Education and Training","Business, Administration, Finance and Law","Unknown")
 
 la_plot_data$Starts <- as.numeric(la_plot_data$Starts)
 la_plot_data$Achievements <- as.numeric(la_plot_data$Achievements) # New scipt - Error : object 'SSA' not found
@@ -435,21 +408,7 @@ map <- function(measure) {
 
 ###########
 #Deve Work
-## Note - need to summarise!!!! %>% 
-#group_by(academic_year,Age) %>% 
- # summarise(Starts=round(sum(Starts),-1))
 
-#  data <- filter(reason_ud,
-#                 level == 'National',
-#                 school_type == schtype,
-#                 year >= 201112) %>%
-#    select(year, perm_physical_pupils:perm_other)
-
-#  data_long <- data %>% gather(key = reason,
-#                               value = exc,
-#                               perm_physical_pupils:perm_other)
-
-#  return(data_long %>% spread(key = year, value =  exc))
 perm_reason_table  <- function(la,age, level_select) {
   #d <- filter(main_ud, level == "School",la_name == la) %>% 
   d <- filter(la_plot_data, la_name==la,Age==age,level==level_select,SSA!='Totals') %>%
@@ -460,21 +419,15 @@ perm_reason_table  <- function(la,age, level_select) {
       level,
       Age,
       Starts
-      #Achievements
-      # perm_excl_rate,
-      # fixed_excl,
-      # fixed_excl_rate,
-      #  one_plus_fixed,
-      #  one_or_more_fixed_excl_rate
+
     )
-  
-  #return(d %>% select(SSA,Achievements))
+
   return(d %>% select(SSA,Starts)%>%mutate_each(funs(prettyNum(., big.mark=","))))
 }
 
 
 fixed_reason_table  <- function(la,age, level_select) {
-  #d <- filter(main_ud, level == "School",la_name == la) %>% 
+
   d <- filter(la_plot_data, la_name==la,Age==age,level==level_select,SSA!='Totals') %>%
     select(
       #     year,
@@ -484,14 +437,10 @@ fixed_reason_table  <- function(la,age, level_select) {
       Age,
       # Starts
       Achievements
-      # perm_excl_rate,
-      # fixed_excl,
-      # fixed_excl_rate,
-      #  one_plus_fixed,
-      #  one_or_more_fixed_excl_rate
+
     )
   
-  #return(d %>% select(SSA,Achievements))
+
   return(d %>% select(SSA,Achievements)%>%mutate_each(funs(prettyNum(., big.mark=","))))
 }
 
@@ -506,12 +455,7 @@ perm_reason_bar <- function(la,age, level_select){
       level,
       Age,
       Starts
-      #      Achievements
-      # perm_excl_rate,
-      # fixed_excl,
-      # fixed_excl_rate,
-      #  one_plus_fixed,
-      #  one_or_more_fixed_excl_rate
+
     )%>% arrange(SSA)
   
   return(ggplot(data=data, aes(x=SSA,y=as.numeric(Starts))) +
