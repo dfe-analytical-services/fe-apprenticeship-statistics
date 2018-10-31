@@ -157,30 +157,7 @@ server <- function(input, output) {
     # grid.draw (ggplotGrob(Plot7)) doesn#t work
   })
   
-  # 2. Reason ----
-  
-  # output$perm_reason <- renderPlot({perm_reason_bar(input$reasonschtype)})
-  # output$fixed_reason <- renderPlot({fixed_reason_bar(input$reasonschtype)})
-  
-  # output$perm_reason_t <- renderTable({perm_reason_table(input$reasonschtype)},  bordered = TRUE, spacing = 'm')
-  # output$fixed_reason_t <- renderTable({fixed_reason_table(input$reasonschtype)},  bordered = TRUE, spacing = 'm')
-  
-  
-  # 2. Pivot table ----
-  
-  #  output$mypivot = renderRpivotTable({
-  #  rpivotTable(
-  #     pivot,
-  #     rows = c("LAD","Level","variable"),
-  #     cols = c("Age"), ##cols = c("Age","SSA T1"),
-  #     aggregatorName = "Sum",
-  #     inclusions = c(list( LAD = list("Sheffield")),list( variable = list("Starts_R"))),
-  ##     exclusions = c(list( LAD = list("Totals")),list( Region = list("Totals")),list( PCON = list("Totals")),list( Level = list("Totals"))),
-  #     vals = "value",
-  #     rendererName = "Table"
-  #   )  
-  
-  # })
+
   
   
   # 3. LA Breakdown ---- See LA trends for multi reasons
