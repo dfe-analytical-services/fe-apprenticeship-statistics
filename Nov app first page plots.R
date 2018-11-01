@@ -8,14 +8,16 @@
 library(Rcpp)
 library(leaflet)
 library(geojsonio)
-library(rgdal)
 library(sp)
 library(data.table)
 library(RColorBrewer)
 library(raster)
 
 library(pander)
-library(tidyverse)
+library(dplyr)
+library(stringr)
+library(readr)
+library(ggplot2)
 library(shinycssloaders)
 library(plotly)
 
@@ -23,13 +25,9 @@ library(DT)
 library(ggalt)
 library(magrittr)
 
-library (rpivotTable)
-library (reshape2)
-library(grid)
 library(packrat)
 library(httr)
 library(testthat)
-library(devtools)
 library(RSelenium)
 
 
