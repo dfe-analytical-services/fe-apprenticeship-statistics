@@ -121,7 +121,10 @@ shinyUI(
    mainPanel(
      selectInput("breakdown","Select dimension to see time-series of starts",
                  c("age-group","level")),
-     h3(strong("Apprenticeship starts by ",textOutput("selection")," 2012/13 to 2017/18")),
+ # Fix/7 - text on three lines rather than one
+     #    h3(strong("Apprenticeship starts by ",textOutput("selection")," 2012/13 to 2017/18")),
+ ## h3(strong("Apprenticeship starts for 2012/13 to 2017/18")),# text on one line
+      h3(strong(htmlOutput("selection") )),
      plotOutput("inter_plot"),
      hr(),
    #  "Can also shove in a table of the values", 
