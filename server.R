@@ -132,13 +132,28 @@ server <- function(input, output) {
     }
     
     })
-  output$datatable <- renderTable({
-    if (input$breakdown == 'age-group'){
-      print.data.frame(dcast(data = startsbyage, formula = Age~academic_year, fun.aggregate = sum, value.var = "Starts"))}
-    else if (input$breakdown == 'level'){
-      print.data.frame(dcast(data = startsbylev, formula = Level~academic_year, fun.aggregate = sum, value.var = "Starts"))}
+
+ #Rick Old front page data 
+  #  output$datatable <- renderTable({
+   # if (input$breakdown == 'age-group'){
+  #    print.data.frame(dcast(data = startsbyage, formula = Age~academic_year, fun.aggregate = sum, value.var = "Starts"))}
+  #  else if (input$breakdown == 'level'){
+  #    print.data.frame(dcast(data = startsbylev, formula = Level~academic_year, fun.aggregate = sum, value.var = "Starts"))}
     
-    })
+  #  })
+  
+  #And then the server code becomes - Rick front page:
+  
+  output$datatable <- renderTable({
+    
+    if (input$breakdown == 'age-group'){
+      
+      print.data.frame(startsbyagetab)}
+    
+    else if (input$breakdown == 'level'){
+      
+      print.data.frame(startsbylevtab)}
+  })
   
   output$selection <- renderText({input$breakdown})
   ## End rick code
