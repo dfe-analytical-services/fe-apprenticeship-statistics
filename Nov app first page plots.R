@@ -103,6 +103,35 @@ level_plot <- ggplot(data=startsbylev) +
         axis.text.x = element_blank(),
         axis.text.y = element_text(size=8),
         legend.text = element_text(size=8))
+
+# Rick front page format changes
+startsbyagetab <- dcast(data = startsbyage,
+                        
+                        formula = Age~academic_year,
+                        
+                        fun.aggregate = sum, value.var = "Starts",
+                        
+                        margins = "Age")
+
+startsbyagetab <- format(startsbyagetab,big.mark = ",",scientific = F)
+
+startsbyagetab$Age <- gsub('(all)','Total',startsbyagetab$Age)
+
+
+startsbylevtab <- dcast(data = startsbylev,
+                        
+                        formula = Level~academic_year,
+                        
+                        fun.aggregate = sum, value.var = "Starts",
+                        
+                        margins = "Level")
+
+startsbylevtab <- format(startsbylevtab,big.mark = ",",scientific = F)
+
+startsbylevtab$Level <- gsub('(all)','Total',startsbylevtab$Level)
+
+
+
 ########
 #Jon's script
 #######
