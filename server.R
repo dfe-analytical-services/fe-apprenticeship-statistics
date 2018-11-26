@@ -154,8 +154,13 @@ server <- function(input, output) {
       
       print.data.frame(startsbylevtab)}
   })
-  
-  output$selection <- renderText({input$breakdown})
+  # Fix/7 - https://stackoverflow.com/questions/23233497/outputting-multiple-lines-of-text-with-rendertext-in-r-shiny
+  #output$selection <- renderText({input$breakdown})
+  output$selection <- renderUI({
+    str1 <- paste("Apprenticeship starts by ",input$breakdown," :2012/13 to 2017/18")
+    HTML(paste(str1))
+    
+  })
   ## End rick code
   ##########
   # Jon code
