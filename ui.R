@@ -81,17 +81,19 @@ shinyUI(
  # Sidebar with a slider input for number of bins 
  sidebarLayout(
    sidebarPanel(verticalLayout(
-     h3(strong("Apprenticeship starts in England - analysis tool")),
+     h3(strong("Apprenticeship starts in England",br(),
+               "- experimental analysis tool")),
      hr(),
-     "This tool is designed to enable users to drill down further into more detailed information on apprenticeship starts and is currently under development",
+     "This tool is designed to enable users to explore detailed information on apprenticeship starts in the 2017/18 academic year and is currently under development.",
      hr(),
      h4(strong("Background")),
-     "[Text to be agreed] The purpose of this dashboard is to present an overview of apprenticeship starts in England and to allow lower level breakdowns of starts than those included within our National Statistics Release.",
-     "It provides a summary of full-year apprenticeship starts from 2012/13 to 2017/18 and offers an interactive way to investigate starts in the latest academicyear in more detail.",
+     "The purpose of this tool is to present an overview of apprenticeship starts in England and to allow lower-level breakdowns of starts to compliment those included within our latest statistics releases, published on the 6th December 2018.",
+     br(),
+     "It provides a time-series of full-year apprenticeship starts from 2012/13 to 2017/18 and offers an interactive way to investigate starts in the latest academic year in different Local Authorities in more detail.",
      hr(),
      h4(strong("Latest National Statistics")),
      "For more further education (FE) statistics, please refer to the: ", 
-     a(" FE and skills statistical first release (SFR), ", 
+     a(" FE and skills statistical release, ", 
        href = "https://www.gov.uk/government/collections/further-education-and-skills-statistical-first-release-sfr",
        target="_blank"),"and the",a(" FE data library", 
                                     href = "https://www.gov.uk/government/collections/fe-data-library",
@@ -108,14 +110,15 @@ shinyUI(
      
      "Email",
      a("FE Official Statistics", href="mailto:FE.OFFICIALSTATISTICS@education.gov.uk?subject=FE statistics enquiry",
-       target="_blank"),
-     hr(),
-     h4(strong("Guidance and methodology")),
-     "Add something about methodolgy and guidance - separate tab at end of app or refer back to main publication?",
-     a("Link to wherever - this'll take you to school workforce for now",
-       href = "https://www.gov.uk/government/collections/statistics-school-workforce",
-       target = "_blank"))
-       ),
+       target="_blank"))
+     #hr(),
+     #h4(strong("Guidance and methodology")),
+     #"A quality and methodology information document accompanies our 'Further Education and Skills' statistical publication: ",
+     #a("Quality and methodology document",
+     #   href = "https://www.gov.uk/government/statistics/announcements/further-education-and-skills-november-2018",
+     #  target = "_blank"))
+   ),
+   
    
    # Show a plot of the selected distribution
    mainPanel(
@@ -305,82 +308,62 @@ tabPanel("Map",
 # 5. Tab 5 ----
 
 tabPanel("Data and methods",
-         h4(strong("Data sources")),
-         "This release provides headline experimental statistics on the use of the apprenticeship service. These include apprenticeship service account registrations (ASAs) and number of commitments (reported to November 2017), where an apprentice who is expected to go on to start has been recorded in the system.
-         
-         New to this release are monthly apprenticeship starts information for the first 3 months of the 2017 to 2018 academic year and apprenticeship levy declarations (reported to November 2017).
+         h4(strong("Overview")),
+         "This tool presents information on apprenticeships (16+) in England. Apprenticeships are paid jobs that incorporate on- and off-the-job training leading to nationally recognised qualifications. As an employee, apprentices earn as they learn and gain practical skills in the workplace.", 
+         br(),
+         br(),
+         "A time-series of apprenticeship starts for full academic years 2012/13 to 2017/18, by age-group and level are included in this tool plus interactive breakdowns of local authority district apprenticeship starts and achievements by age, level and subject area for final 2017/18 data. Starts and achievement volumes by local authority are also available as a map.
          ",
          br(),
          br(),
-         # Cannot download XLSX files
-         #               h5(strong("Main text: SFR08/2018")),
-         #       "This file may not be suitable for users of assistive technology",
-         #       br(),
-         #       downloadButton("downloadtext_ud", "Download"),
-         #       br(),
-         #       br(),
-         #        h5(strong("Main tables: SFR08/2018")),
-         #       "This file may not be suitable for users of assistive technology",
-         #       br(),
-         #       downloadButton("downloadtable_ud", "Download"),
-         #       br(),
-         #       br(),
-         h5(strong("Apprenticeship and levy statistics: February 2018")),
-         "For the full report please refer to the: ", 
-         a(" Main Text", 
-           href = "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/682464/SFR13_2018_Appandlevystats_Feb_Commentary.pdf",
-           target="_blank"),"and the",a(" Main Table", 
-                                        href = "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/682459/SFR13_2018_Appandlevystats_Feb_Main_table.xlsx",
-                                        target="_blank"),
-         #   "How to view a PDF doc in Shiny",
-         br(),
-         # tags$iframe(style="height:600px; width:100%", src="http://localhost/data/SFR08_2018_App_and_Levy_Stats_commentary.pdf")),
+         h4(strong("Apprenticeship and levy statistics: November 2018")),
+         "For the full release, please refer to the ", 
+         a(" publication page", 
+           href = "https://www.gov.uk/government/statistics/announcements/apprenticeship-and-levy-statistics-november-2018",
+           target="_blank"),
          br(),
          br(),
-         h4(strong("Definitions")),
+         h4(strong("Guidance and methodology")),
+         "A quality and methodology information document accompanies our 'Further Education and Skills' statistical publication: ",
+         a("Quality and methodology document",href = "https://www.gov.uk/government/statistics/announcements/further-education-and-skills-november-2018",target = "_blank"),
+         br(),
+         br(),
+         h4(strong("Apprenticeship starts")),
+         "Starts refer to the number of apprenticeship programmes that begin in a given time period.This measure is helpful in determining the take-up of programmes.",
+         br(),
+         "An apprentice is counted for each individual apprenticeship they start; for example, if one individual started one intermediate level apprenticeship and one advanced level apprenticeship, they would be counted as two starts.",
+         br(),
+         br(),
+         h4(strong("When reviewing tables, please note that:")),
          hr(),
          fluidRow(column(
-           h5(href = "https://www.gov.uk/", "Apprenticeship Start"), width =3),
+           h5("We preserve confidentiality"), width =2),
            column(
-             "A start refers to the number of apprenticeship programmes that begin in a given time period. 
-             This measure is helpful in determining the take-up of programmes. 
-             An apprentice is counted for each individual apprenticeship they start; 
-             for example, if one individual started one intermediate level apprenticeship 
-             and one advanced level apprenticeship, they would be counted as two starts.", width = 9)),
+             "The ",a("Code of Practice for Official Statistics",href="https://www.statisticsauthority.gov.uk/monitoring-and-assessment/code-of-practice/",
+                      target="-blank"), "requires us to take reasonable steps to ensure that our published or disseminated statistics protect confidentiality.",
+             width = 8)),
          hr(),
          fluidRow(column(
-           h5("Commitments"), width =3),
+           h5("We suppress some figures"), width =2),
            column(
-             "A commitment is where a potential apprentice, who is expected to go 
-             on to start an apprenticeship, has been recorded in the system. 
-             The apprenticeship service provides a self-managed service on which 
-             organisations and providers can add the details of an apprentice. 
-             These commitments may be either", strong("fully agreed "),"or",strong("pending approval."),  
-             "These were able to be entered from March 2017.",
-             br(),
-             br(),
-             "A",strong("fully agreed commitment")," has agreement on the apprenticeship service from 
-             both the organisation and the training provider.",
-             br(),
-             br(),
-             "A",strong("pending approval commitment")," means that details of an apprentice have been added but 
-             neither the provider and/or the organisation have finalised the commitment in the service. These commitments 
-             show an intent for an apprentice to start, however may not materialise into a fully agreed commitment in the future.",
-             width = 9)),
+             "In the local authority tables, volumes below 5 are suppressed (this includes values of zero).", width = 8)),
          hr(),
          fluidRow(column(
-           h5("Apprenticeship levy"), width =3),
+           h5("We adopt symbols to help identify suppression"), width =2),
            column(
-             "The UK wide apprenticeship levy came into force on 6 April 2017 requiring 
-             all UK public and private sector employers with an annual pay bill of £3 million or more to invest 
-             in apprenticeship training. Since May 2017, funding arrangements for apprenticeships changed to give
-             employers greater control over funding for apprenticeship training.
-             More information on paying the apprenticeship levy can be found at this link:",a(" Apprenticeship Levy, ", 
-                                                                                              href = "https://www.gov.uk/guidance/pay-apprenticeship-levy",
-                                                                                              target="_blank"), width = 9)),
+             "Symbols are used in the tables as follows:",
+             br(),"'-' indicates a volume of below 5 in the local authority tables.", width = 8)),
+         hr(),
+         fluidRow(column(
+           h5("We round figures"), width =2),
+           column(
+             "In the headline time-series, volumes are rounded to the nearest 100. In the local authority tables, volumes are rounded to the nearest 10.", width = 8)),
          hr()
-         )
+)#,
 
+#         hr()
+         )
+#
            )
 
-           ) # to resolve errors
+ #          ) # to resolve errors
