@@ -147,121 +147,16 @@ startsbylevtab <- format(startsbylevtab,big.mark = ",",scientific = F)
 # load main_ud file
 # includes main measures at school, la, region and national level for 2006/07 to 2015/16
 
-# 1415 - historic info
-main_ud <- read_csv('data/poc_2_1415.csv', col_types = cols(.default = "c"))
-poc3<- read_csv('data/poc3.csv', col_types = cols(.default = "c"))
-
-#glimpse(main_ud)
 
 # load reason_ud file
 # includes la, region and national level for 2006/07 to 2015/16
 
 #POC Output - 1617
-#poc_ud <- read_csv('data/poc3.csv', col_types = cols(.default = "c")) # Old script
-#poc_ud <- read_csv('data/PT3_2.csv', col_types = cols(.default = "c")) # New script
 poc_ud <- read_csv('data/PT3_2_num_2.csv', col_types = cols(.default = "c")) # New script
-
-
-#SFR Output
-SFR_ud <- read_csv('data/sfr.csv', col_types = cols(.default = "c"))
-# head(poc_ud)
-
-#Commit Output
-nat_commit <- read_csv('data/commit_ud.csv', col_types = cols(.default = "c"))
-
-# characteristics UD
-
-#char_ud <- read_csv('data/SFR35_2017_National_characteristics.csv', col_types = cols(.default = "c"))
-
-####
-# 4. Front page ----
-
-## national plots
-
-# create a national summary table (used for plots): -- Based code - FE_Trends.R
-
-nat_summary <-
-  dplyr::select(main_ud, 
-                Academic_Year,
-                SSA_T1,
-                # Age,
-                # Level,
-                # Gender,
-                #Framework, 
-                Starts , 
-                Achievements
-                
-  ) %>%
-  arrange(Academic_Year)
-
-nat_summary[nat_summary=="-"]<-0
-
-nat_summary$Starts <- as.numeric(nat_summary$Starts)
-nat_summary$Achievements <- as.numeric(nat_summary$Achievements)
-
-# Aggregate
-nat_summary<-group_by(nat_summary, Academic_Year,SSA_T1) %>% summarise_all(sum) #%>% mutate(Starts = sum(Starts), Achievements = sum(Achievements)) 
-
-
-
-
-## Quarterly Commitments
-nat_summary <- # eror agge not found
-  dplyr::select(
-    filter(SFR_ud, level == 'All Apprenticeships'), #,Age=="Total"
-    Quarter, Age,Value) %>%
-  arrange(Quarter)
-
-nat_commit <- # eror agge not found
-  dplyr::select(nat_commit, Date,AllAges_P,AllAges_F,AllAges_T)%>%
-  arrange(Date)
-
-# National bar chart (front page)
-
-national_bars <- function(category) { # was x
-  if (category== 'P') {
-    data <- filter(nat_summary, Age == 'Total') %>%
-      mutate(Quarter = as.factor(Quarter),
-             Value = as.numeric(Value))
-    
-    p_bar_g <- 
-      ggplot(data, aes(x = Quarter, y = Value)) + #formatyr(Quarter)
-      geom_bar(fill = 'dodgerblue4', stat = "identity") +
-      theme_classic() +
-      ylab("Apprenticeships") +
-      xlab("Academic Quarters") +
-      #scale_y_continuous(breaks = seq(0, max(data$Value + 0.01), 0.02)) + generates 1m line
-      theme(axis.title.x = element_blank())
-    #plot(p_bar_g) 
-    
-    return(ggplotly(p_bar_g))
-  }
-  if (category == 'F') { # update with stacked plot
-    
-    data2 <- select(nat_commit, Date,AllAges_T)
-    #%>% mutate(Date=as.Date(Date), AllAges_T = as.numeric(AllAges_T))
-    
-    f_bar_g <- 
-      ggplot(data2, aes(x = Date, y = AllAges_T)) +
-      geom_bar(fill = 'red', stat = "identity") +
-      theme_classic() +
-      ylab("Commitments") +
-      xlab("Monthly Figures") +
-      #scale_y_continuous(breaks = seq(0, max(data$value + 0.5), 0.50)) +
-      theme(axis.title.x = element_blank())
-    
-    return(ggplotly(f_bar_g))
-  }
-}
-
 
 ####
 # 4. LA trends ----
 #Starts & Achievements
-#la_plot_data <-
-#  dplyr::select(poc_ud, 
-#                level,la_name,SSA,Age,Starts,Achievements) # Old script
-#filter(data, Level=='Totals', `SSA T1`=='Totals',Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals',Age=='Totals')
 
 la_plot_data <-
   dplyr::filter(poc_ud, Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals')#%>%
@@ -307,7 +202,6 @@ ukLocalAuthoritises <- spTransform(ukLocalAuthoritises, CRS("+proj=longlat +ellp
 englishLocalAuthorities = subset(ukLocalAuthoritises, LAD16CD %like% "E") # Code begins with E - reference is case sensitive.
 
 # English Data
-#data <- read_csv("data/POC3_tom.csv") # old script
 data <- read_csv("data/PT3_2.csv") # new script
 data <- dplyr::filter(data, Level=='Totals', `SSA T1`=='Totals',Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals',Age=='Totals') %>%
     select(`LAD Code`,LAD,`1617_Starts`,`1617_Achievements`) 
@@ -467,7 +361,6 @@ map <- function(measure) {
 
 #  return(data_long %>% spread(key = year, value =  exc))
 perm_reason_table  <- function(la,age, level_select) {
-  #d <- filter(main_ud, level == "School",la_name == la) %>% 
   d <- filter(la_plot_data, la_name==la,Age==age,level==level_select,SSA!='Totals') %>%
     select(
       #     year,
@@ -490,7 +383,6 @@ perm_reason_table  <- function(la,age, level_select) {
 
 
 fixed_reason_table  <- function(la,age, level_select) {
-  #d <- filter(main_ud, level == "School",la_name == la) %>% 
   d <- filter(la_plot_data, la_name==la,Age==age,level==level_select,SSA!='Totals') %>%
     select(
       #     year,
