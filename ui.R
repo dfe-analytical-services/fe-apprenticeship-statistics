@@ -12,7 +12,7 @@ source("Nov app first page plots.R")
 
 # Define UI 
 shinyUI( 
-  navbarPage("Apprenticeships Statistics", id = "nav", theme = "shiny.css",
+  navbarPage("Apprenticeships Statistics", id = "nav", theme = "shiny.css", header=singleton(tags$head(includeScript('www/google-analytics.js'))),
                     
   #Tab1
 # tabPanel("Static version",
