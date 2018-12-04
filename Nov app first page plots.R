@@ -34,25 +34,24 @@ library(RSelenium)
 ##
 #Ricks script
 ##setwd("~/Nov app sandbox")
-data_ini <- read.csv("appagelevel.csv")
+data_front_page <- read.csv("appagelevel_jh.csv") %>%
+  filter(!is.na(Level))%>%
+  rename(academic_year = Academic.Year)
+
 options(scipen = 999)
 
-startsbyage <- data_ini %>% 
-  group_by(academic_year,Age) %>% 
-  summarise(Starts=round(sum(Starts),-1))# %>% mutate_each(funs(prettyNum(., big.mark=",")))
-#startsbyage <- startsbyage%>%  select (Starts)%>% mutate_each(funs(prettyNum(., big.mark=","))) ## add big.mark for comma separated
-
+startsbyage <- data_front_page 
 startsbyage$Age <- str_wrap(startsbyage$Age, width = 5)
-startsbyage$Age <- factor(startsbyage$Age, levels = c("Under\n19","19-24","25+"))
+startsbyage$Age <- factor(startsbyage$Age, levels = c("Under\n19","19-24","25+", "Total"))
 startsbyage$academic_year <- paste0(substr(as.character(startsbyage$academic_year),1,4),"/",
                                     substr(as.character(startsbyage$academic_year),5,6))
 #startsbyage <- startsbyage%>%  select (Starts)%>% mutate_each(funs(prettyNum(., big.mark=",")))
 
-age_plot <- ggplot(data=startsbyage) +
+age_plot <- ggplot(data=startsbyage %>% filter(Age != "Total")) +
     geom_col(mapping = aes(x=Age, y=Starts, fill=Age))+
     facet_grid(.~academic_year, switch = "x") +
     labs(x="Age-group by academic year", y="Starts", fill="Age-group")+
-  scale_fill_manual(values=c("lightblue3","blue","navy"))+
+  scale_fill_manual(values=c("lightblue3","blue","navy", "grey"))+
   scale_y_continuous(breaks = seq(0,250000,50000),expand = c(0, 0), 
                      limits = c(0,250000), 
                      labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
@@ -70,23 +69,22 @@ age_plot <- ggplot(data=startsbyage) +
         axis.text.y = element_text(size=8),
         legend.text = element_text(size=8))
 
-startsbylev <- data_ini %>% 
-  group_by(academic_year,Level) %>% 
-  summarise(Starts=round(sum(Starts),-1))
+startsbylev <- data_front_page
 
 startsbylev <- startsbylev %>% filter(Level !='NA')
 startsbylev$Level <- factor(startsbylev$Level, levels = 
                               c("Intermediate Apprenticeship",
                                 "Advanced Apprenticeship",
-                                "Higher Apprenticeship"))
+                                "Higher Apprenticeship", 
+                                "Total"))
 startsbylev$academic_year <- paste0(substr(as.character(startsbylev$academic_year),1,4),"/",
                                     substr(as.character(startsbylev$academic_year),5,6))
 
-level_plot <- ggplot(data=startsbylev) +
+level_plot <- ggplot(data=startsbylev %>% filter(Level != "Total")) +
   geom_col(mapping = aes(x=Level, y=Starts, fill=Level))+
   facet_grid(.~academic_year,switch = "x")+
   labs(x="Level by academic year", y="Starts", fill="Level")+
-  scale_fill_manual(values=c("lightblue3","blue","navy")) +
+  scale_fill_manual(values=c("lightblue3","blue","navy", "grey")) +
   scale_y_continuous(breaks = seq(0,300000,50000),expand = c(0, 0), 
                      limits = c(0,300000), 
                      labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
@@ -105,30 +103,21 @@ level_plot <- ggplot(data=startsbylev) +
         legend.text = element_text(size=8))
 
 # Rick front page format changes
-startsbyagetab <- dcast(data = startsbyage,
-                        
-                        formula = Age~academic_year,
-                        
-                        fun.aggregate = sum, value.var = "Starts",
-                        
-                        margins = "Age")
+library(tidyr)
+startsbyagetab <- startsbyage %>%
+  filter(Level == "Total") %>%
+  spread(academic_year, Starts) %>%
+  select(-Level)
 
 startsbyagetab <- format(startsbyagetab,big.mark = ",",scientific = F)
 
-startsbyagetab$Age <- gsub('(all)','Total',startsbyagetab$Age)
+startsbylevtab <- startsbylev %>%
+  filter(Age == "Total") %>%
+  spread(academic_year, Starts) %>%
+  select(-Age)
 
-
-startsbylevtab <- dcast(data = startsbylev,
-                        
-                        formula = Level~academic_year,
-                        
-                        fun.aggregate = sum, value.var = "Starts",
-                        
-                        margins = "Level")
 
 startsbylevtab <- format(startsbylevtab,big.mark = ",",scientific = F)
-
-startsbylevtab$Level <- gsub('(all)','Total',startsbylevtab$Level)
 
 
 
@@ -158,121 +147,16 @@ startsbylevtab$Level <- gsub('(all)','Total',startsbylevtab$Level)
 # load main_ud file
 # includes main measures at school, la, region and national level for 2006/07 to 2015/16
 
-# 1415 - historic info
-main_ud <- read_csv('data/poc_2_1415.csv', col_types = cols(.default = "c"))
-poc3<- read_csv('data/poc3.csv', col_types = cols(.default = "c"))
-
-#glimpse(main_ud)
 
 # load reason_ud file
 # includes la, region and national level for 2006/07 to 2015/16
 
 #POC Output - 1617
-#poc_ud <- read_csv('data/poc3.csv', col_types = cols(.default = "c")) # Old script
-#poc_ud <- read_csv('data/PT3_2.csv', col_types = cols(.default = "c")) # New script
 poc_ud <- read_csv('data/PT3_2_num_2.csv', col_types = cols(.default = "c")) # New script
-
-
-#SFR Output
-SFR_ud <- read_csv('data/sfr.csv', col_types = cols(.default = "c"))
-# head(poc_ud)
-
-#Commit Output
-nat_commit <- read_csv('data/commit_ud.csv', col_types = cols(.default = "c"))
-
-# characteristics UD
-
-#char_ud <- read_csv('data/SFR35_2017_National_characteristics.csv', col_types = cols(.default = "c"))
-
-####
-# 4. Front page ----
-
-## national plots
-
-# create a national summary table (used for plots): -- Based code - FE_Trends.R
-
-nat_summary <-
-  dplyr::select(main_ud, 
-                Academic_Year,
-                SSA_T1,
-                # Age,
-                # Level,
-                # Gender,
-                #Framework, 
-                Starts , 
-                Achievements
-                
-  ) %>%
-  arrange(Academic_Year)
-
-nat_summary[nat_summary=="-"]<-0
-
-nat_summary$Starts <- as.numeric(nat_summary$Starts)
-nat_summary$Achievements <- as.numeric(nat_summary$Achievements)
-
-# Aggregate
-nat_summary<-group_by(nat_summary, Academic_Year,SSA_T1) %>% summarise_all(sum) #%>% mutate(Starts = sum(Starts), Achievements = sum(Achievements)) 
-
-
-
-
-## Quarterly Commitments
-nat_summary <- # eror agge not found
-  dplyr::select(
-    filter(SFR_ud, level == 'All Apprenticeships'), #,Age=="Total"
-    Quarter, Age,Value) %>%
-  arrange(Quarter)
-
-nat_commit <- # eror agge not found
-  dplyr::select(nat_commit, Date,AllAges_P,AllAges_F,AllAges_T)%>%
-  arrange(Date)
-
-# National bar chart (front page)
-
-national_bars <- function(category) { # was x
-  if (category== 'P') {
-    data <- filter(nat_summary, Age == 'Total') %>%
-      mutate(Quarter = as.factor(Quarter),
-             Value = as.numeric(Value))
-    
-    p_bar_g <- 
-      ggplot(data, aes(x = Quarter, y = Value)) + #formatyr(Quarter)
-      geom_bar(fill = 'dodgerblue4', stat = "identity") +
-      theme_classic() +
-      ylab("Apprenticeships") +
-      xlab("Academic Quarters") +
-      #scale_y_continuous(breaks = seq(0, max(data$Value + 0.01), 0.02)) + generates 1m line
-      theme(axis.title.x = element_blank())
-    #plot(p_bar_g) 
-    
-    return(ggplotly(p_bar_g))
-  }
-  if (category == 'F') { # update with stacked plot
-    
-    data2 <- select(nat_commit, Date,AllAges_T)
-    #%>% mutate(Date=as.Date(Date), AllAges_T = as.numeric(AllAges_T))
-    
-    f_bar_g <- 
-      ggplot(data2, aes(x = Date, y = AllAges_T)) +
-      geom_bar(fill = 'red', stat = "identity") +
-      theme_classic() +
-      ylab("Commitments") +
-      xlab("Monthly Figures") +
-      #scale_y_continuous(breaks = seq(0, max(data$value + 0.5), 0.50)) +
-      theme(axis.title.x = element_blank())
-    
-    return(ggplotly(f_bar_g))
-  }
-}
-
 
 ####
 # 4. LA trends ----
 #Starts & Achievements
-#la_plot_data <-
-#  dplyr::select(poc_ud, 
-#                level,la_name,SSA,Age,Starts,Achievements) # Old script
-#filter(data, Level=='Totals', `SSA T1`=='Totals',Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals',Age=='Totals')
 
 la_plot_data <-
   dplyr::filter(poc_ud, Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals')#%>%
@@ -318,7 +202,6 @@ ukLocalAuthoritises <- spTransform(ukLocalAuthoritises, CRS("+proj=longlat +ellp
 englishLocalAuthorities = subset(ukLocalAuthoritises, LAD16CD %like% "E") # Code begins with E - reference is case sensitive.
 
 # English Data
-#data <- read_csv("data/POC3_tom.csv") # old script
 data <- read_csv("data/PT3_2.csv") # new script
 data <- dplyr::filter(data, Level=='Totals', `SSA T1`=='Totals',Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals',Age=='Totals') %>%
     select(`LAD Code`,LAD,`1617_Starts`,`1617_Achievements`) 
@@ -478,7 +361,6 @@ map <- function(measure) {
 
 #  return(data_long %>% spread(key = year, value =  exc))
 perm_reason_table  <- function(la,age, level_select) {
-  #d <- filter(main_ud, level == "School",la_name == la) %>% 
   d <- filter(la_plot_data, la_name==la,Age==age,level==level_select,SSA!='Totals') %>%
     select(
       #     year,
@@ -501,7 +383,6 @@ perm_reason_table  <- function(la,age, level_select) {
 
 
 fixed_reason_table  <- function(la,age, level_select) {
-  #d <- filter(main_ud, level == "School",la_name == la) %>% 
   d <- filter(la_plot_data, la_name==la,Age==age,level==level_select,SSA!='Totals') %>%
     select(
       #     year,

@@ -25,11 +25,11 @@ server <- function(input, output) {
   
 
   output$age_plot <- renderPlot({
-    ggplot(data=startsbyage) +
+    ggplot(data=startsbyage %>% filter(Age != "Total")) +
       geom_col(mapping = aes(x=Age, y=Starts, fill=Age))+
       facet_grid(.~academic_year, switch = "x") +
       labs(x="Age-group by academic year", y="Starts", fill="Age-group")+
-      scale_fill_manual(values=c("lightblue3","blue","navy"))+
+      scale_fill_manual(values=c("lightblue3","blue","navy", "grey"))+
       scale_y_continuous(breaks = seq(0,250000,50000),expand = c(0, 0), 
                          limits = c(0,250000), 
                          labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
@@ -52,11 +52,11 @@ server <- function(input, output) {
       })
   
   output$level_plot <- renderPlot({
-    ggplot(data=startsbylev) +
+    ggplot(data=startsbylev %>% filter(Level != "Total")) +
       geom_col(mapping = aes(x=Level, y=Starts, fill=Level))+
       facet_grid(.~academic_year,switch = "x")+
       labs(x="Level by academic year", y="Starts", fill="Level")+
-      scale_fill_manual(values=c("lightblue3","blue","navy")) +
+      scale_fill_manual(values=c("lightblue3","blue","navy", "grey")) +
       scale_y_continuous(breaks = seq(0,300000,50000),expand = c(0, 0), 
                          limits = c(0,300000), 
                          labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
@@ -80,11 +80,11 @@ server <- function(input, output) {
 
   output$inter_plot <- renderPlot({
     if(input$breakdown == 'age-group') {
-      ggplot(data=startsbyage) +
+      ggplot(data=startsbyage %>% filter(Age != "Total")) +
         geom_col(mapping = aes(x=Age, y=Starts, fill=Age))+
         facet_grid(.~academic_year, switch = "x") +
         labs(x="Age-group by academic year", y="Starts", fill="Age-group")+
-        scale_fill_manual(values=c("lightblue3","blue","navy"))+
+        scale_fill_manual(values=c("lightblue3","blue","navy", "grey"))+
         scale_y_continuous(breaks = seq(0,250000,50000),expand = c(0, 0), 
                            limits = c(0,250000), 
                            labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
@@ -105,11 +105,11 @@ server <- function(input, output) {
               legend.text = element_text(size=12),
               legend.title = element_text(size=12)) 
     } else if (input$breakdown == 'level') {
-      ggplot(data=startsbylev) +
+      ggplot(data=startsbylev %>% filter(Level != "Total")) +
         geom_col(mapping = aes(x=Level, y=Starts, fill=Level))+
         facet_grid(.~academic_year,switch = "x")+
         labs(x="Level by academic year", y="Starts", fill="Level")+
-        scale_fill_manual(values=c("lightblue3","blue","navy")) +
+        scale_fill_manual(values=c("lightblue3","blue","navy", "grey")) +
         scale_y_continuous(breaks = seq(0,300000,50000),expand = c(0, 0), 
                            limits = c(0,300000), 
                            labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
