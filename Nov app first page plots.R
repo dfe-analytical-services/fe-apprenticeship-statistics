@@ -34,25 +34,24 @@ library(RSelenium)
 ##
 #Ricks script
 ##setwd("~/Nov app sandbox")
-data_ini <- read.csv("appagelevel.csv")
+data_front_page <- read.csv("appagelevel_jh.csv") %>%
+  filter(!is.na(Level))%>%
+  rename(academic_year = Academic.Year)
+
 options(scipen = 999)
 
-startsbyage <- data_ini %>% 
-  group_by(academic_year,Age) %>% 
-  summarise(Starts=round(sum(Starts),-1))# %>% mutate_each(funs(prettyNum(., big.mark=",")))
-#startsbyage <- startsbyage%>%  select (Starts)%>% mutate_each(funs(prettyNum(., big.mark=","))) ## add big.mark for comma separated
-
+startsbyage <- data_front_page 
 startsbyage$Age <- str_wrap(startsbyage$Age, width = 5)
-startsbyage$Age <- factor(startsbyage$Age, levels = c("Under\n19","19-24","25+"))
+startsbyage$Age <- factor(startsbyage$Age, levels = c("Under\n19","19-24","25+", "Total"))
 startsbyage$academic_year <- paste0(substr(as.character(startsbyage$academic_year),1,4),"/",
                                     substr(as.character(startsbyage$academic_year),5,6))
 #startsbyage <- startsbyage%>%  select (Starts)%>% mutate_each(funs(prettyNum(., big.mark=",")))
 
-age_plot <- ggplot(data=startsbyage) +
+age_plot <- ggplot(data=startsbyage %>% filter(Age != "Total")) +
     geom_col(mapping = aes(x=Age, y=Starts, fill=Age))+
     facet_grid(.~academic_year, switch = "x") +
     labs(x="Age-group by academic year", y="Starts", fill="Age-group")+
-  scale_fill_manual(values=c("lightblue3","blue","navy"))+
+  scale_fill_manual(values=c("lightblue3","blue","navy", "grey"))+
   scale_y_continuous(breaks = seq(0,250000,50000),expand = c(0, 0), 
                      limits = c(0,250000), 
                      labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
@@ -70,23 +69,22 @@ age_plot <- ggplot(data=startsbyage) +
         axis.text.y = element_text(size=8),
         legend.text = element_text(size=8))
 
-startsbylev <- data_ini %>% 
-  group_by(academic_year,Level) %>% 
-  summarise(Starts=round(sum(Starts),-1))
+startsbylev <- data_front_page
 
 startsbylev <- startsbylev %>% filter(Level !='NA')
 startsbylev$Level <- factor(startsbylev$Level, levels = 
                               c("Intermediate Apprenticeship",
                                 "Advanced Apprenticeship",
-                                "Higher Apprenticeship"))
+                                "Higher Apprenticeship", 
+                                "Total"))
 startsbylev$academic_year <- paste0(substr(as.character(startsbylev$academic_year),1,4),"/",
                                     substr(as.character(startsbylev$academic_year),5,6))
 
-level_plot <- ggplot(data=startsbylev) +
+level_plot <- ggplot(data=startsbylev %>% filter(Level != "Total")) +
   geom_col(mapping = aes(x=Level, y=Starts, fill=Level))+
   facet_grid(.~academic_year,switch = "x")+
   labs(x="Level by academic year", y="Starts", fill="Level")+
-  scale_fill_manual(values=c("lightblue3","blue","navy")) +
+  scale_fill_manual(values=c("lightblue3","blue","navy", "grey")) +
   scale_y_continuous(breaks = seq(0,300000,50000),expand = c(0, 0), 
                      limits = c(0,300000), 
                      labels = function(d){paste0(format(d,big.mark=",",trim=TRUE))}) +
@@ -105,30 +103,21 @@ level_plot <- ggplot(data=startsbylev) +
         legend.text = element_text(size=8))
 
 # Rick front page format changes
-startsbyagetab <- dcast(data = startsbyage,
-                        
-                        formula = Age~academic_year,
-                        
-                        fun.aggregate = sum, value.var = "Starts",
-                        
-                        margins = "Age")
+library(tidyr)
+startsbyagetab <- startsbyage %>%
+  filter(Level == "Total") %>%
+  spread(academic_year, Starts) %>%
+  select(-Level)
 
 startsbyagetab <- format(startsbyagetab,big.mark = ",",scientific = F)
 
-startsbyagetab$Age <- gsub('(all)','Total',startsbyagetab$Age)
+startsbylevtab <- startsbylev %>%
+  filter(Age == "Total") %>%
+  spread(academic_year, Starts) %>%
+  select(-Age)
 
-
-startsbylevtab <- dcast(data = startsbylev,
-                        
-                        formula = Level~academic_year,
-                        
-                        fun.aggregate = sum, value.var = "Starts",
-                        
-                        margins = "Level")
 
 startsbylevtab <- format(startsbylevtab,big.mark = ",",scientific = F)
-
-startsbylevtab$Level <- gsub('(all)','Total',startsbylevtab$Level)
 
 
 
