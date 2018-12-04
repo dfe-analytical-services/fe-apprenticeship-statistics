@@ -83,6 +83,8 @@ shinyUI(
    sidebarPanel(verticalLayout(
      h3(strong("Apprenticeship starts in England - analysis tool")),
      hr(),
+     h3(strong("LATEST 2017/18 FINAL DATA TO BE PUBLISHED SHORTLY AFTER 9:30AM THURSDAY 6th DECEMBER")),
+     hr(),
      "This tool is designed to enable users to drill down further into more detailed information on apprenticeship starts and is currently under development",
      hr(),
      h4(strong("Background")),
