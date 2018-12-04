@@ -156,11 +156,11 @@ shinyUI(
 tabPanel("Local Authority Breakdown",
          sidebarLayout(
            sidebarPanel(
-             h4(strong("Apprenticeships by Sector Subject Area T1")),
+             h4(strong("Apprenticeships by Sector Subject Area Tier 1")),
              "Local Authority report broken down by Age and Level",
              br(),
              downloadButton("downloadfsmchar", "Download"),
-             h5(strong("Pick a local authority")),                            
+             h5(strong("Pick a local authority district")),                            
              selectInput(
                "select2",
                label = NULL,
@@ -231,7 +231,7 @@ tabPanel("Map",
          sidebarLayout(
            sidebarPanel(
              h4(strong("Mapping")),
-             em("Starts and achievements"),
+             em("Starts and achievements for local authority district"),
              br(),
              br(),
              h5(strong("Pick a measure")),
