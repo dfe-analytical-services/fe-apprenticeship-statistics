@@ -161,7 +161,7 @@ poc_ud <- read_csv('data/PT3_2_num_2.csv', col_types = cols(.default = "c")) # N
 la_plot_data <-
   dplyr::filter(poc_ud, Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals')#%>%
   la_plot_data <-
-  dplyr::  select(la_plot_data, Level,LAD,`SSA T1`,Age,`1617_Starts`,`1617_Achievements`) 
+  dplyr::  select(la_plot_data, Level,LAD,`SSA T1`,Age,`1718_Starts`,`1718_Achievements`) 
   
   
 colnames(la_plot_data) <- c("level","la_name","SSA","Age","Starts","Achievements")
@@ -204,7 +204,7 @@ englishLocalAuthorities = subset(ukLocalAuthoritises, LAD16CD %like% "E") # Code
 # English Data
 data <- read_csv("data/PT3_2.csv") # new script
 data <- dplyr::filter(data, Level=='Totals', `SSA T1`=='Totals',Region=='Totals',PCON=='Totals',`PCON Code`=='Totals',LAD != 'Totals',`LAD Code` != 'Totals',Age=='Totals') %>%
-    select(`LAD Code`,LAD,`1617_Starts`,`1617_Achievements`) 
+    select(`LAD Code`,LAD,`1718_Starts`,`1718_Achievements`) 
 colnames(data)[1] <- "new_lad_code"
 colnames(data)[2] <- "la_name"
 colnames(data)[3] <- "starts"
