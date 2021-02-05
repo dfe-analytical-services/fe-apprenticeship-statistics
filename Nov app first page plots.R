@@ -223,10 +223,22 @@ mapData <- merge(englishLocalAuthorities,
 # 3. Create mapping components ----
 
 # Generate the bins of the data you want to have as colours
-binsStart <- c(0, 500, 15000, 3000, 4500, 6000,7500) # Note - extended bin range and elements 5 to 6
+# binsStart <- c(0, 500, 15000, 3000, 4500, 6000,7500) # Note - extended bin range and elements 5 to 6
+
+map_gov_colours <- c(
+  "#FFBF47",
+  "#EC933D",
+  "#D86733",
+  "#C53A28",
+  "#B10E1E"
+  
+)
+
+palStart = colorQuantile(map_gov_colours, data$starts, n = 5)
+
 
 # Tell R what you want to map by variable wise
-palStart <- colorBin("YlOrRd", domain = data$starts, bins = binsStart)
+# palStart <- colorBin("YlOrRd", domain = data$starts, bins = binsStart)
 
 
 
@@ -240,10 +252,10 @@ start_labels <- sprintf("<strong>%s</strong><br/>Starts <strong>%s</strong>",
 
 
 # Generate the bins of the data you want to have as colours
-binsAchievements <- c(0, 1500, 3000, 4500, 6000, 11000)
+palAchievements <- colorQuantile(map_gov_colours, data$achievements, n = 5)
 
 # Tell R what you want to map by variable wise
-palAchievements <- colorBin("YlOrRd", domain = data$achievements, bins = binsAchievements)
+# palAchievements <- colorBin("YlOrRd", domain = data$achievements, bins = binsAchievements)
 
 
 
@@ -278,16 +290,16 @@ map <- function(measure) {
                     style = list("font-weight" = "normal", padding = "3px 8px"),
                     textsize = "15px",
                     direction = "auto",
-                    opacity = 1))  %>%
-      addLegend(colors = c("#FFFFB2", "#FECC5C", "#FD8D3C", "#F03B20", "#BD0026", "#C74375", "#808080"), #https://en.wikipedia.org/wiki/Pantone
-                opacity = 0.7, 
-                title = NULL,
-                position = "topright",
-                labels= c("Lowest starts", "","","","","","Highest starts")) %>%
+                    opacity = 1)) %>%
       setMaxBounds(lat1 = 55.5, lng1 = -6.8, lat2 = 49.99, lng2 = 1.95)
     
     
-    
+    return(map %>%
+      addLegend(colors = c("#FFFFB2", "#FECC5C", "#FD8D3C", "#F03B20", "#BD0026", "#808080"), 
+                opacity = 1, 
+                title = NULL,
+                position = "topright",
+                labels= c("Lowest start numbers", "","","","Highest start numbers", "No data")))  
     
     
     
@@ -309,18 +321,16 @@ map <- function(measure) {
                     style = list("font-weight" = "normal", padding = "3px 8px"),
                     textsize = "15px",
                     direction = "auto",
-                    opacity = 1))  %>%
-      addLegend(colors = c("#FFFFB2", "#FECC5C", "#FD8D3C", "#F03B20", "#BD0026", "#808080"), 
-                opacity = 0.7, 
-                title = NULL,
-                position = "topright",
-                labels= c("Lowest achievements", "","","","Highest achievements", "No data")) %>%
+                    opacity = 1)) %>%
       setMaxBounds(lat1 = 55.5, lng1 = -6.8, lat2 = 49.99, lng2 = 1.95)
     
+  return(map %>%
+    addLegend(colors = c("#FFFFB2", "#FECC5C", "#FD8D3C", "#F03B20", "#BD0026", "#808080"), 
+              opacity = 1, 
+              title = NULL,
+              position = "topright",
+              labels= c("Lowest achievement numbers", "","","","Highest achievement numbers", "No data")))
   }
-  
-  return(map)
-  
 }
 
 ####
